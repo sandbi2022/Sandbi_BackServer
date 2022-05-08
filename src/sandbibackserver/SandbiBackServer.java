@@ -22,7 +22,7 @@ public class SandbiBackServer {
 
         Timer timer = new Timer();
 
-        timer.schedule(new MyTimerTask(), 0, 1000);
+        timer.schedule(new MyTimerTask(), 0, 120000);
 
     }
 
@@ -33,7 +33,7 @@ class MyTimerTask extends TimerTask {
     @Override
     public void run() {
 
-        CheckTrans.mapAddress();
+        CheckTrans.readTrans();
 
     }
 

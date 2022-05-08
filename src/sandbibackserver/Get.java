@@ -12,6 +12,8 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
@@ -56,6 +58,7 @@ public class Get implements X509TrustManager {
             SSLSocketFactory ssf = sslContext.getSocketFactory();
             URL url = new URL(requestUrl);
             HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
+            conn.addRequestProperty("User-Agent", "Mozilla/4.76"); 
             conn.setDoOutput(true);
             conn.setDoInput(true);
             conn.setUseCaches(false);
@@ -81,6 +84,7 @@ public class Get implements X509TrustManager {
             }
         } catch (Exception e) {
 //			e.printStackTrace();
+            Logger.getLogger(ReadDoc.class.getName()).log(Level.SEVERE, null, e);
         }
         return buffer.toString();
     }

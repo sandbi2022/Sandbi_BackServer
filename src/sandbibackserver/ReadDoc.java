@@ -18,7 +18,7 @@ import com.alibaba.fastjson.JSON;
 public class ReadDoc {
 
     public static HashMap getSqlInfo() {
-        String text = ReadFile("/opt/front/doc/sql.json");
+        String text = ReadFile("sql.json");
         HashMap result = JSON.parseObject(text, HashMap.class);
         return result;
     }
