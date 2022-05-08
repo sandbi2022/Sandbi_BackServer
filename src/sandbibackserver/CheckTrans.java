@@ -28,8 +28,10 @@ public class CheckTrans {
     private static String PASS = ReadDoc.getSqlInfo().get("PASS").toString();
 
     public static void readTrans() {
+        
+        String address = "42OFZZPR45B3XZDBFLXX62TIXNSKYPCJACOSE3MR72JFI3F6Q7NC2GJSCQ";
 
-        String link = "https://algoindexer.testnet.algoexplorerapi.io/v2/accounts/" + "42OFZZPR45B3XZDBFLXX62TIXNSKYPCJACOSE3MR72JFI3F6Q7NC2GJSCQ" + "/transactions";
+        String link = "https://algoindexer.testnet.algoexplorerapi.io/v2/accounts/" + address + "/transactions";
 
         String s = Get.httpsRequest(link, "GET", null);
         HashMap result = JSON.parseObject(s, HashMap.class);
@@ -37,23 +39,29 @@ public class CheckTrans {
         for (int i = 0; i < txs.size(); i++) {
 
             HashMap trade = JSON.parseObject(txs.get(i), HashMap.class);
-            String hash;
+            String hash, receiver;
             int assetid;
             double value;
             String senderAddress;
+            
             if (trade.containsKey("asset-transfer-transaction")) {
                 hash = trade.get("id").toString();
                 HashMap asset = JSON.parseObject(trade.get("asset-transfer-transaction").toString(), HashMap.class);
-                value = Double.parseDouble(asset.get("amount").toString());
+                value = Double.parseDouble(asset.get("amount").toString())/1000000;
                 assetid = Integer.parseInt(asset.get("asset-id").toString());
+                receiver = asset.get("receiver").toString();
                 senderAddress = trade.get("sender").toString();
                 
             } else {
                 hash = trade.get("id").toString();
                 HashMap asset = JSON.parseObject(trade.get("payment-transaction").toString(), HashMap.class);
-                value = Double.parseDouble(asset.get("amount").toString());
+                value = Double.parseDouble(asset.get("amount").toString())/1000000;
+                receiver = asset.get("receiver").toString();
                 assetid = -1;
                 senderAddress = trade.get("sender").toString();
+            }
+            if(senderAddress.equals(address)){
+                continue;
             }
             String UID = getUID(senderAddress);
             if (!findTrade(hash, assetid)) {
